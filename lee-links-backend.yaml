@@ -1,0 +1,19 @@
+alerts:
+  - rule: DEPLOYMENT_FAILED
+  - rule: DOMAIN_FAILED
+name: lee-links-backend
+region: sfo
+services:
+  - environment_slug: python
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: leeroywking/lee_links_backend
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    name: lee-links-backend
+    routes:
+      - path: /
+    run_command: gunicorn app:app --worker-tmp-dir /dev/shm
+    source_dir: /
