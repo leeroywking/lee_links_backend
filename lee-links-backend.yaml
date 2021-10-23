@@ -15,5 +15,5 @@ services:
     name: lee-links-backend
     routes:
       - path: /
-    run_command: gunicorn app:app --worker-tmp-dir /dev/shm
+    run_command: gunicorn example:app --worker-tmp-dir /dev/shm
     source_dir: /
