@@ -27,8 +27,11 @@ caches_folder = './.spotify_caches/'
 if not os.path.exists(caches_folder):
     os.makedirs(caches_folder)
 
+# print(session.get(os.listdir(caches_folder)[0]))
+
 def session_cache_path():
-    return caches_folder + session.get('uuid')
+    if len(os.listdir(caches_folder)) > 0:
+        return caches_folder + os.listdir(caches_folder)[0]
 
 @app.route('/')
 def index():
@@ -66,8 +69,8 @@ def index():
 def sign_out():
     try:
         # Remove the CACHE file (.cache-test) so that a new user can authorize.
-        os.remove(session_cache_path())
         session.clear()
+        os.remove(session_cache_path())
     except OSError as e:
         print ("Error: %s - %s." % (e.filename, e.strerror))
     return redirect('/')
@@ -94,6 +97,8 @@ def currently_playing():
         return redirect('/')
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     track = spotify.current_user_playing_track()
+    track["token"] = cache_handler.get_cached_token()["access_token"]
+    # print(session)
     if not track is None:
         return track
     return "No track currently playing."
